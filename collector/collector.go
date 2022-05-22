@@ -334,21 +334,21 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(ipPrefixClassDesc, prometheus.GaugeValue, 1, stationStatusResponse.Data.IpPrefixClass)
 	}
 
-	callLog, err := c.Station.GetCallLog()
-	if err != nil {
-		log.With("error", err.Error()).Error("Failed to get call log")
-	} else {
-		for port, phoneNumberCallLog := range callLog.Lines {
-			if phoneNumberCallLog.Data == nil {
-				continue
-			}
-			for _, callLogEntry := range phoneNumberCallLog.Data.Entries { //port", "id", "external_number", "direction", "type
-				labels := []string{port, callLogEntry.Id, callLogEntry.ExternalNumber, callLogEntry.Direction, callLogEntry.Type}
-				ch <- prometheus.MustNewConstMetric(callEndTimeDesc, prometheus.GaugeValue, parse2float(callLogEntry.EndTime), labels...)
-				ch <- prometheus.MustNewConstMetric(callStartTimeDesc, prometheus.GaugeValue, parse2float(callLogEntry.StartTime), labels...)
-			}
-		}
-	}
+	// callLog, err := c.Station.GetCallLog()
+	// if err != nil {
+	// 	log.With("error", err.Error()).Error("Failed to get call log")
+	// } else {
+	// 	for port, phoneNumberCallLog := range callLog.Lines {
+	// 		if phoneNumberCallLog.Data == nil {
+	// 			continue
+	// 		}
+	// 		for _, callLogEntry := range phoneNumberCallLog.Data.Entries { //port", "id", "external_number", "direction", "type
+	// 			labels := []string{port, callLogEntry.Id, callLogEntry.ExternalNumber, callLogEntry.Direction, callLogEntry.Type}
+	// 			ch <- prometheus.MustNewConstMetric(callEndTimeDesc, prometheus.GaugeValue, parse2float(callLogEntry.EndTime), labels...)
+	// 			ch <- prometheus.MustNewConstMetric(callStartTimeDesc, prometheus.GaugeValue, parse2float(callLogEntry.StartTime), labels...)
+	// 		}
+	// 	}
+	// }
 
 	ledSettingResponse, err := c.Station.GetLedSetting()
 	if err != nil {
