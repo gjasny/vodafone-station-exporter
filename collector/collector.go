@@ -277,15 +277,15 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(powerUpstreamDesc, prometheus.GaugeValue, parse2float(upstreamChannel.Power), labels...)
 			ch <- prometheus.MustNewConstMetric(rangingStatusUpstreamDesc, prometheus.GaugeValue, 1, append(labels, upstreamChannel.RangingStatus)...)
 		}
-        for _, ofdmaUpstreamChannel := range docsisStatusResponse.Data.OfdmaUpstreamData {
-            labels := []string{ofdmaUpstreamChannel.Id, ofdmaUpstreamChannel.ChannelIdUp, ofdmaUpstreamChannel.Fft, ofdmaUpstreamChannel.ChannelType}
-            ch <- prometheus.MustNewConstMetric(startFrequencyOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.StartFrequency)*10e9, labels...)
-            ch <- prometheus.MustNewConstMetric(endFrequencyOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.EndFrequency)*10e9, labels...)
-            ch <- prometheus.MustNewConstMetric(centralFrequencyOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.CentralFrequency)*10e9, labels...)
-            ch <- prometheus.MustNewConstMetric(bandwidthOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.Bandwidth)*10e9, labels...)
-            ch <- prometheus.MustNewConstMetric(powerOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.Power)*10e9, labels...)
-            ch <- prometheus.MustNewConstMetric(rangingStatusOfdmaUpstreamDesc, prometheus.GaugeValue, 1, append(labels, ofdmaUpstreamChannel.RangingStatus)...)
-        }
+		for _, ofdmaUpstreamChannel := range docsisStatusResponse.Data.OfdmaUpstreamData {
+			labels := []string{ofdmaUpstreamChannel.Id, ofdmaUpstreamChannel.ChannelIdUp, ofdmaUpstreamChannel.Fft, ofdmaUpstreamChannel.ChannelType}
+			ch <- prometheus.MustNewConstMetric(startFrequencyOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.StartFrequency)*10e9, labels...)
+			ch <- prometheus.MustNewConstMetric(endFrequencyOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.EndFrequency)*10e9, labels...)
+			ch <- prometheus.MustNewConstMetric(centralFrequencyOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.CentralFrequency)*10e9, labels...)
+			ch <- prometheus.MustNewConstMetric(bandwidthOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.Bandwidth)*10e9, labels...)
+			ch <- prometheus.MustNewConstMetric(powerOfdmaUpstreamDesc, prometheus.GaugeValue, parse2float(ofdmaUpstreamChannel.Power)*10e9, labels...)
+			ch <- prometheus.MustNewConstMetric(rangingStatusOfdmaUpstreamDesc, prometheus.GaugeValue, 1, append(labels, ofdmaUpstreamChannel.RangingStatus)...)
+		}
 	}
 
 	stationStatusResponse, err := c.Station.GetStationStatus()
@@ -350,35 +350,35 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	// 	}
 	// }
 
-	ledSettingResponse, err := c.Station.GetLedSetting()
-	if err != nil {
-		log.With("error", err.Error()).Error("Failed to get LED setting")
-	} else if ledSettingResponse.Data != nil {
-		ch <- prometheus.MustNewConstMetric(statusLedEnabledDesc, prometheus.GaugeValue, bool2float64(ledSettingResponse.Data.Led == "true"))
-	}
+	//	ledSettingResponse, err := c.Station.GetLedSetting()
+	//	if err != nil {
+	//		log.With("error", err.Error()).Error("Failed to get LED setting")
+	//	} else if ledSettingResponse.Data != nil {
+	//		ch <- prometheus.MustNewConstMetric(statusLedEnabledDesc, prometheus.GaugeValue, bool2float64(ledSettingResponse.Data.Led == "true"))
+	//	}
 
-	stationAboutResponse, err := c.Station.GetStationAbout()
-	if err != nil {
-		log.With("error", err.Error()).Error("Failed to get station about information")
-	} else if stationAboutResponse.Data != nil {
-		for _, softwareInfo := range stationAboutResponse.Data.Software {
-			ch <- prometheus.MustNewConstMetric(softwareVersionInfoDesc, prometheus.GaugeValue, 1, softwareInfo.Name, softwareInfo.Version, softwareInfo.License)
-		}
-	}
+	// stationAboutResponse, err := c.Station.GetStationAbout()
+	// if err != nil {
+	//	log.With("error", err.Error()).Error("Failed to get station about information")
+	//} else if stationAboutResponse.Data != nil {
+	//		for _, softwareInfo := range stationAboutResponse.Data.Software {
+	//			ch <- prometheus.MustNewConstMetric(softwareVersionInfoDesc, prometheus.GaugeValue, 1, softwareInfo.Name, softwareInfo.Version, softwareInfo.License)
+	//		}
+	//	}
 
-	phonenumbersResponse, err := c.Station.GetPhonenumbers()
-	if err != nil {
-		log.With("error", err.Error()).Error("Failed to get phone numbers information")
-	} else if phonenumbersResponse.Data != nil {
-		ch <- prometheus.MustNewConstMetric(lineStatusDesc, prometheus.GaugeValue, 1, "1", phonenumbersResponse.Data.LineStatus1)
-		ch <- prometheus.MustNewConstMetric(lineStatusDesc, prometheus.GaugeValue, 1, "2", phonenumbersResponse.Data.LineStatus2)
-		for _, phoneNumber := range parseCallnumber(phonenumbersResponse.Data.Callnumber1) {
-			ch <- prometheus.MustNewConstMetric(lineNumberDesc, prometheus.GaugeValue, 1, "1", phoneNumber)
-		}
-		for _, phoneNumber := range parseCallnumber(phonenumbersResponse.Data.Callnumber2) {
-			ch <- prometheus.MustNewConstMetric(lineNumberDesc, prometheus.GaugeValue, 1, "2", phoneNumber)
-		}
-	}
+	//	phonenumbersResponse, err := c.Station.GetPhonenumbers()
+	//	if err != nil {
+	//		log.With("error", err.Error()).Error("Failed to get phone numbers information")
+	//	} else if phonenumbersResponse.Data != nil {
+	//		ch <- prometheus.MustNewConstMetric(lineStatusDesc, prometheus.GaugeValue, 1, "1", phonenumbersResponse.Data.LineStatus1)
+	//		ch <- prometheus.MustNewConstMetric(lineStatusDesc, prometheus.GaugeValue, 1, "2", phonenumbersResponse.Data.LineStatus2)
+	//		for _, phoneNumber := range parseCallnumber(phonenumbersResponse.Data.Callnumber1) {
+	//			ch <- prometheus.MustNewConstMetric(lineNumberDesc, prometheus.GaugeValue, 1, "1", phoneNumber)
+	//		}
+	//		for _, phoneNumber := range parseCallnumber(phonenumbersResponse.Data.Callnumber2) {
+	//			ch <- prometheus.MustNewConstMetric(lineNumberDesc, prometheus.GaugeValue, 1, "2", phoneNumber)
+	//		}
+	//	}
 
 	logoutresponse, err := c.Station.Logout()
 	if logoutresponse != nil {
