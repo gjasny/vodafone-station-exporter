@@ -1,0 +1,10 @@
+[Unit]
+Description=Vodafone Station Exporter
+
+[Service]
+ExecStart=vodafone-station-exporter -vodafone.station-password secret -web.listen-address 127.0.0.1:9420
+Restart=always
+DynamicUser=yes
+
+[Install]
+WantedBy=multi-user.target
