@@ -108,6 +108,6 @@ func handleMetricsRequest(w http.ResponseWriter, request *http.Request) {
 	})
 	promhttp.HandlerFor(registry, promhttp.HandlerOpts{
 		ErrorLog:      log.NewErrorLogger(),
-		ErrorHandling: promhttp.ContinueOnError,
+		ErrorHandling: promhttp.HTTPErrorOnError,
 	}).ServeHTTP(w, request)
 }
