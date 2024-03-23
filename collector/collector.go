@@ -252,6 +252,7 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	docsisStatusResponse, err := c.Station.GetDocsisStatus()
 	if err != nil {
 		fmt.Println(err.Error())
+		ch <- prometheus.NewInvalidMetric(centralFrequencyDownstreamDesc, err)
 	}
 	if err == nil && docsisStatusResponse.Data != nil {
 		for _, downstreamChannel := range docsisStatusResponse.Data.Downstream {
