@@ -253,7 +253,7 @@ func NewVodafoneStation(stationUrl, password string) *VodafoneStation {
 		Password: password,
 		client: &http.Client{
 			Jar:     cookieJar,
-			Timeout: time.Second * 20, // getting DOCSIS status can be slow!
+			Timeout: time.Second * 30, // getting DOCSIS status can be slow!
 		},
 	}
 }
